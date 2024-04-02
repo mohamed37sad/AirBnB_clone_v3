@@ -11,6 +11,7 @@ import os
 from os import getenv
 from models.base_model import BaseModel
 from models.engine import file_storage
+from models.state import State
 FileStorage = file_storage.FileStorage
 
 
@@ -98,3 +99,22 @@ class TestFileStorage(unittest.TestCase):
         self.storage.new(instance)
         test_dict[instance_key] = instance
         self.assertEqual(test_dict, self.storage._FileStorage__objects)
+
+    def test_get_fs(self):
+        """Testing the file get fs method"""
+        fs_obj = FileStorage()
+        state = State()
+        # add the new state to the file_storage
+        fs_obj.new(state)
+        first_state_id = list(self.storage.all("State").values())[0].id
+        self.assertEqual(type(self.storage.get("State", first_state_id)), State)
+
+    def test_count_fs(self):
+        """Testing the file_storage count method"""
+        self.storage.reload()
+        res = self.storage.all(None)
+        cn = self.storage.count(None)
+        self.assertEqual(len(res), cn)
+        res1 = self.storage.all("State")
+        cn1 = self.storage.count("State")
+        self.assertEqual(len(res1), cn1)
