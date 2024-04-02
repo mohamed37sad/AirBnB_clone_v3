@@ -19,6 +19,25 @@ class FileStorage:
                     dictOfClassMatchInObjectDict[key] = value
             return dictOfClassMatchInObjectDict
 
+    def get(self, cls, id):
+        """Method that retrives a single object from the __0bjects dict"""
+        if (id == None and cls == None):
+            return None
+        for key, val in self.all(cls).items():
+            # Class.id
+            gotcha = str(cls) + '.' + str(id)
+            print(gotcha)
+            if key == gotcha:
+                return (val)
+
+    def count(self, cls=None):
+        """Count the number of objects in storage"""
+        if (cls == None):
+            return (None)
+        else:
+            count = len(self.all(cls))
+            return count
+
     def new(self, obj):
         """Adds new object to storage dictionary"""
         self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
@@ -42,10 +61,10 @@ class FileStorage:
         from models.review import Review
 
         classes = {
-            'BaseModel': BaseModel, 'User': User, 'Place': Place,
-            'State': State, 'City': City, 'Amenity': Amenity,
-            'Review': Review
-        }
+                'BaseModel': BaseModel, 'User': User, 'Place': Place,
+                'State': State, 'City': City, 'Amenity': Amenity,
+                'Review': Review
+                }
         try:
             with open(self.__file_path, 'r') as f:
                 jo = json.load(f)
